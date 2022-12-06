@@ -39,15 +39,6 @@ locations = {
 }
 
 
-# A dictionary for the simplified dragon text game
-# The dictionary links a room to other rooms.
-rooms = {
-        'Great Hall': {'South': 'Bedroom'},
-        'Bedroom': {'North': 'Great Hall', 'East': 'Cellar'},
-        'Cellar': {'West': 'Bedroom'}
-    }
-
-
 def welcome():
     print('****************************')
     print('* Welcome to Relic Hunter! *')
@@ -56,7 +47,7 @@ def welcome():
 
 def status():  # player's status
     print('\nYou are in {}.'.format(current_location))
-    print('Inventory : []')
+    print('Artifacts found:', num_artifacts_found, 'of 8')
     if item_exists():
         print('You have found', location_data['item'] + '!')
     print('------------------')
@@ -71,6 +62,7 @@ def help_menu():
     print('| To move, type "go north", "go south", etc. |')
     print('| To exit, type "exit" or "q".               |')
     print('| To add Items to Inventory: get "item name" |')
+    print('| To show inventory: type "i"                |')
     print('| Type "help" to see this message again.     |')
     print('----------------------------------------------')
     return ''
@@ -88,6 +80,34 @@ def item_exists():
         return False
 
 
+def show_inventory():
+    print('Inventory:')
+    for i in artifact_list:
+        print(i)
+
+
+def draw_cross():
+    print('      .-.')
+    print('    __| |__')
+    print('   [__   __]')
+    print('      | |')
+    print('      | |')
+    print('      | |')
+    print("      '-'")
+
+
+def draw_tombstone():
+    print('             .')
+    print('            _|_')
+    print('             |')
+    print("         .-'~~~`-.")
+    print("       .'         `.")
+    print('       |  R  I  P  |')
+    print('       |           |')
+    print('       |           |')
+    print(r'     \\|           |//')
+    print('    ^^^^^^^^^^^^^^^^^^^^^')
+
 # START HERE
 welcome()
 help_menu()
@@ -95,8 +115,23 @@ help_menu()
 current_location = 'Lombardy'
 exit_game = False
 num_artifacts_found = 0
+artifact_list = []
 
 while not exit_game:
+    if num_artifacts_found == 8:
+        draw_cross()
+        print('Victory! Armed with the full Armor of God')
+        print('you can now take your stand against the devil\'s schemes.')
+        exit_game = True
+        current_location = 'exit'
+        continue
+    if current_location == 'Saxony' and num_artifacts_found != 8:
+        draw_tombstone()
+        print('You have found The Evil One before you were ready and have been slain.')
+        print('May God have mercy on your soul.')
+        exit_game = True
+        current_location = 'exit'
+        continue
     player_input = input(status()).lower().strip()  # Get input from the player.
     command = player_input.split()                  # Put the input into a list.
     if not command:                                 # Check to see if the player input anything.
@@ -108,13 +143,15 @@ while not exit_game:
         continue
     if command[0] == 'help':                        # Display the help message.
         help_menu()
+    elif command[0] == 'i':
+        show_inventory()
     elif len(command) < 2:                          # If less than two words were entered, continue.
         print('\n--- Invalid command! ---')
         continue
-    elif command[0] != 'go':                        # Check if the first string is 'go'. If not, continue.
+    elif command[0] != 'go' and command[0] != 'get':  # Check if the first string is 'go' or 'get'. If not, continue.
         print('\n--- Invalid command! ---')
         continue
-    else:
+    elif command[0] == 'go':
         direction = command[1]                      # The second string is the direction.
         direction = direction.capitalize()          # Capitalize it to match the key in the dictionary.
 
@@ -133,7 +170,25 @@ while not exit_game:
                 continue
         else:
             print('--- Invalid Location ---')           # I don't think this is possible
-                                                        # but it can't hurt to cover all the bases.
+    elif command[0] == 'get':
+        if item_exists():
+            location_data = locations[current_location]
+            # print(command[1:])
+            item_name = ' '.join(command[1:]).lower()
+            # print('item name:', item_name)
+            this_item = location_data['item']
+            this_item = this_item.lower()
+            if item_name == this_item:
+                print('You have retrieved', location_data['item'] + '!')
+                artifact_list.append(location_data['item'])
+                del location_data['item']
+                num_artifacts_found += 1
+            else:
+                print('That item does not exist')
+                continue
+        else:
+            print('No such item.')
+            continue
 
 if current_location == 'exit':
     print('\nYou have left the game!')
