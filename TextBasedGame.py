@@ -49,14 +49,16 @@ rooms = {
 
 
 def welcome():
-    print('***************************')
-    print('* Welcome to the Dungeon! *')
-    print('***************************')
+    print('****************************')
+    print('* Welcome to Relic Hunter! *')
+    print('****************************')
 
 
 def status():  # player's status
-    print('\nYou are in the {}.'.format(current_location))
+    print('\nYou are in {}.'.format(current_location))
     print('Inventory : []')
+    if item_exists():
+        print('You have found', location_data['item'] + '!')
     print('------------------')
     print('Enter your move: ', end='')
     return ''
@@ -64,6 +66,8 @@ def status():  # player's status
 
 def help_menu():
     print('\n---------------------HELP---------------------')
+    print('| Objective: Gather 8 Legendary artifacts    |')
+    print('|   before the Evil One consumes your soul!  |')
     print('| To move, type "go north", "go south", etc. |')
     print('| To exit, type "exit" or "q".               |')
     print('| To add Items to Inventory: get "item name" |')
@@ -72,21 +76,34 @@ def help_menu():
     return ''
 
 
+def get_item():
+    pass
+
+
+def item_exists():
+    location = locations[current_location]
+    if 'item' in location:
+        return True
+    else:
+        return False
+
+
 # START HERE
 welcome()
 help_menu()
 
-current_location = 'Great Hall'
-exit_dungeon = False
+current_location = 'Lombardy'
+exit_game = False
+num_artifacts_found = 0
 
-while not exit_dungeon:
+while not exit_game:
     player_input = input(status()).lower().strip()  # Get input from the player.
     command = player_input.split()                  # Put the input into a list.
     if not command:                                 # Check to see if the player input anything.
         print('\n--- Invalid command! ---')         # If not, warn then continue.
         continue
     if command[0] == 'exit' or command[0] == 'q':   # If player types 'exit', then exit the game.
-        exit_dungeon = True
+        exit_game = True
         current_location = 'exit'
         continue
     if command[0] == 'help':                        # Display the help message.
@@ -106,16 +123,17 @@ while not exit_dungeon:
 
         # Look up the current location in the rooms
         # dictionary and get valid exit points.
-        if current_location in rooms:                # If location is in the rooms dict...
-            exit_points = rooms[current_location]    # get the exit points.
-            if direction in exit_points:            # If the direction is available, then change to that location.
-                current_location = exit_points[direction]
+        if current_location in locations:                # If location is in the dictionary
+            location_data = locations[current_location]    # get the exit points and put them into a new dictionary
+            if direction in location_data:            # If the direction is available, then change to that location.
+                current_location = location_data[direction]
+                location_data = locations[current_location]
             else:
                 print('\n*** You can\'t go that way! ***')    # If the direction is not there, warn user and continue.
                 continue
         else:
-            print('--- Invalid room ---')               # I don't think this is possible
+            print('--- Invalid Location ---')           # I don't think this is possible
                                                         # but it can't hurt to cover all the bases.
 
 if current_location == 'exit':
-    print('\nYou have left the dungeon!')
+    print('\nYou have left the game!')
