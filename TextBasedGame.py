@@ -1,17 +1,43 @@
-# Name: ModuleSixMilestone.py
-# Purpose: Module 6 assignment that will create a mini-text game
-#          that allows the user to traverse a portion of the
-#          dragon themed game.
+# Name: TextBasedGame.py
+# Purpose: Project 2 - This is a mini-text game
+#          that allows the user to traverse a series of locations
+#          and retrieve items.
+#
+# Description:
+#
+# The Evil One and his minions are prowling about the
+# world, seeking the ruin of souls.  In order to defeat him,
+# you must collect famous artifacts in late Medieval Europe in
+# an effort to defeat him before he becomes too powerful.  To win,
+# you need to find The Belt of Truth, The Breastplate of Righteousness,
+# The Shield of Faith, The Helmet of Salvation, The Sword of the Spirit,
+# The Shoes of the Gospel, The Spear of Longinus and lastly, The Holy Grail!
+# The Evil One lurks in Saxony.  You begin your quest in Lombardy.
+# May God speed you on your way!
+#
 # Input: Terminal
 # Output: Terminal
 # Created by: Nicholas Sessa
 # Revision History:
-# 20221204  NJS  Initial script.
+# 20221205  NJS  Initial script.
 #
-#
-# TODO: Complete the main project.
 
 import string
+
+
+locations = {
+    'Rome': {'North': 'Lombardy', 'South': 'Naples', 'item': 'The Spear of Longinus'},
+    'Lombardy': {'South': 'Rome', 'West': 'France', 'East': 'Bavaria'},
+    'Bavaria': {'West': 'Lombardy', 'North': 'Saxony', 'item': 'The Holy Grail'},
+    'Saxony': {'South': 'Bavaria', 'item': 'The Evil One'},
+    'France': {'North': 'England', 'West': 'Spain', 'East': 'Lombardy', 'item': 'The Helmet of Salvation'},
+    'Spain': {'East': 'France', 'item': 'The Belt of Truth'},
+    'England': {'South': 'France', 'item': 'The Sword of the Spirit'},
+    'Naples': {'North': 'Rome', 'East': 'Constantinople', 'item': 'The Breastplate of Righteousness'},
+    'Constantinople': {'West': 'Naples', 'East': 'Jerusalem', 'item': 'The Shield of Faith'},
+    'Jerusalem': {'West': 'Constantinople', 'item': 'The Shoes of the Gospel'}
+}
+
 
 # A dictionary for the simplified dragon text game
 # The dictionary links a room to other rooms.
@@ -40,6 +66,7 @@ def help_menu():
     print('\n---------------------HELP---------------------')
     print('| To move, type "go north", "go south", etc. |')
     print('| To exit, type "exit" or "q".               |')
+    print('| To add Items to Inventory: get "item name" |')
     print('| Type "help" to see this message again.     |')
     print('----------------------------------------------')
     return ''
