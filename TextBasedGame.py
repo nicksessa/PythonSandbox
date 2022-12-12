@@ -20,7 +20,15 @@
 # Created by: Nicholas Sessa
 # Revision History:
 # 20221205  NJS  Initial script.
+# 20221211  NJS  Minor changes: Cleaned up comments and print statements used for testing.
 #
+
+# NOTE: I decided to not show the inventory on the screen at all times because
+# the names became too long when the character has many of them.  Instead, the player
+# can simply type 'i' to see a list of all the items in their inventory.
+
+# TODO: add short names for all the artifacts so that the player doesn't have to type so much.
+# TODO: see if putting the valid commands into a dictionary would make the code easier to read and maintain.
 
 import string
 
@@ -47,7 +55,7 @@ def welcome():
 
 def status():  # player's status
     print('\nYou are in {}.'.format(current_location))
-    print('Artifacts found:', num_artifacts_found, 'of 8')
+    print('Artifacts found:', num_artifacts_found, 'of 8 - Type "i" to see view your inventory.')
     if item_exists():
         print('You have found', location_data['item'] + '!')
     print('------------------')
@@ -60,16 +68,12 @@ def help_menu():
     print('| Objective: Gather 8 Legendary artifacts    |')
     print('|   before the Evil One consumes your soul!  |')
     print('| To move, type "go north", "go south", etc. |')
-    print('| To exit, type "exit" or "q".               |')
+    print('| To exit, type "exit" or "q" for quit.      |')
     print('| To add Items to Inventory: get "item name" |')
     print('| To show inventory: type "i"                |')
     print('| Type "help" to see this message again.     |')
     print('----------------------------------------------')
     return ''
-
-
-def get_item():
-    pass
 
 
 def item_exists():
@@ -81,9 +85,13 @@ def item_exists():
 
 
 def show_inventory():
-    print('Inventory:')
-    for i in artifact_list:
-        print(i)
+    print('Inventory:', end=' ')
+    if not artifact_list:
+        print('None')
+    else:
+        print()
+        for i in artifact_list:
+            print(i)
 
 
 def draw_cross():
@@ -107,6 +115,7 @@ def draw_tombstone():
     print('       |           |')
     print(r'     \\|           |//')
     print('    ^^^^^^^^^^^^^^^^^^^^^')
+
 
 # START HERE
 welcome()
@@ -173,9 +182,7 @@ while not exit_game:
     elif command[0] == 'get':
         if item_exists():
             location_data = locations[current_location]
-            # print(command[1:])
             item_name = ' '.join(command[1:]).lower()
-            # print('item name:', item_name)
             this_item = location_data['item']
             this_item = this_item.lower()
             if item_name == this_item:
